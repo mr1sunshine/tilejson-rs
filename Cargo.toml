@@ -1,0 +1,14 @@
+[package]
+name = "tilejson"
+version = "0.1.0"
+authors = ["Aleksandr Ovchinnikov <aleksandr.ovchinnikov@mapbox.com>"]
+edition = "2018"
+description = "Library for decoding and encoding Tile JSON"
+license = "BSD-3-Clause"
+repository = "https://github.com/mr1sunshine/tukejson-rs"
+keywords = ["mapbox", "tilejson", "json"]
+categories = ["decoding", "encoding"]
+
+[dependencies]
+serde = { version = "1.0.104", features = ["derive"] }
+serde_json = "1.0"
