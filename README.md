@@ -1,6 +1,6 @@
 # tilejson-rs
 
-This library is used to encode/decode the `TileJson` format which is described in [TileJson spec 2.2.0](https://github.com/mapbox/tilejson-spec/blob/master/2.2.0/README.md)
+This library is used to encode/decode the `TileJson` format as it described in [TileJson spec 2.2.0](https://github.com/mapbox/tilejson-spec/blob/master/2.2.0/README.md)
 
 ## Usage
 
