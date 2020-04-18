@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Copy)]
 pub struct TileJson {
     /// REQUIRED. A semver.org style version number. Describes the version of
     /// the TileJSON spec that is implemented by this JSON object.
@@ -134,7 +134,7 @@ impl Default for TileJson {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone, Copy)]
 pub enum Scheme {
     #[serde(rename = "xyz")]
     XYZ,
