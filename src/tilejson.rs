@@ -1,5 +1,7 @@
 use serde::{Serialize, Deserialize};
 
+use std::collections::HashMap;
+
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct TileJson {
     /// REQUIRED. A semver.org style version number. Describes the version of
@@ -109,7 +111,22 @@ pub struct TileJson {
     /// value is null, implementations may use their own algorithm for
     /// determining a default location.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub center: Option<Vec<f32>>
+    pub center: Option<Vec<f32>>,
+
+    /// Optional. This seems to only Mapbox specific field to show if Mapbox watermark should be
+    /// displayed or not.
+    #[serde(default = "default_mapbox_logo")]
+    pub mapbox_logo: bool,
+
+    /// Optional. TODO: couldn't find proper description
+    #[serde(default = "default_format")]
+    pub format: String,
+
+    /// REQUIRED. Array.
+    /// An array of objects. Each object describes one layer of vector tile data.
+    /// A vector_layer object MUST contain the id and fields keys, and MAY contain the description, minzoom, or maxzoom keys.
+    #[serde(default)]
+    pub vector_layers: Vec<VectorLayer>,
 }
 
 impl Default for TileJson {
@@ -129,7 +146,10 @@ impl Default for TileJson {
             minzoom: default_minzoom(),
             maxzoom: default_maxzoom(),
             bounds: default_bounds(),
-            center: Option::None
+            center: Option::None,
+            mapbox_logo: default_mapbox_logo(),
+            format: default_format(),
+            vector_layers: vec![],
         }
     }
 }
@@ -166,12 +186,52 @@ fn default_bounds() -> Vec<f32> {
     vec![-180.0, -90.0, 180.0, 90.0]
 }
 
+fn default_mapbox_logo() -> bool {
+    false
+}
+
+fn default_format() -> String {
+    "pbf".to_string()
+}
+
 pub fn decode(tilejson: &str) -> TileJson {
     serde_json::from_str(tilejson).unwrap()
 }
 
 pub fn encode(tilejson: &TileJson) -> String {
     serde_json::to_string(tilejson).unwrap()
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+pub struct VectorLayer {
+    /// REQUIRED. String.
+    /// A string value representing the the layer id. For added context, this is referred to as
+    /// the name of the layer in the https://github.com/mapbox/vector-tile-spec/tree/master/2.1#41-layers
+    pub id: String,
+
+    /// REQUIRED. Object.
+    /// An object whose keys and values are the names and descriptions of attributes available in this layer.
+    /// Each value (description) MUST be a string that describes the underlying data.
+    /// If no fields are present, the fields key MUST be an empty object.
+    #[serde(default, skip_serializing_if = "HashMap::is_empty")]
+    pub fields: HashMap<String, String>,
+
+    /// OPTIONAL. String.
+    /// A string representing a human-readable description of the entire layer's contents.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub description: Option<String>,
+
+    /// OPTIONAL. Integer.
+    /// An integer representing the lowest/highest zoom level whose tiles this layer appears in.
+    /// minzoom MUST be greater than or equal to the set of tiles' minzoom.
+    #[serde(default)]
+    pub minzoom: u16,
+
+    /// OPTIONAL. Integer.
+    /// An integer representing the lowest/highest zoom level whose tiles this layer appears in.
+    /// maxzoom MUST be less than or equal to the set of tiles' maxzoom.
+    #[serde(default)]
+    pub maxzoom: u16,
 }
 
 #[cfg(test)]
