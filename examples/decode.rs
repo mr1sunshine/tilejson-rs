@@ -12,5 +12,5 @@ fn main() {
     let json = fs::read_to_string(&args[1]).unwrap();
 
     let tile = decode(&json);
-    println!("{:?}", tile);
+    println!("{:#?}", tile);
 }
