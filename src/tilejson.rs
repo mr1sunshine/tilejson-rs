@@ -100,7 +100,7 @@ pub struct TileJson {
     /// latitude and longitude values, in the order left, bottom, right, top.
     /// Values may be integers or floating point numbers.
     #[serde(default = "default_bounds")]
-    pub bounds: Vec<f32>,
+    pub bounds: Vec<f64>,
 
     /// OPTIONAL. Default: null.
     /// The first value is the longitude, the second is latitude (both in
@@ -111,7 +111,7 @@ pub struct TileJson {
     /// value is null, implementations may use their own algorithm for
     /// determining a default location.
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub center: Option<Vec<f32>>,
+    pub center: Option<Vec<f64>>,
 
     /// Optional. This seems to only Mapbox specific field to show if Mapbox watermark should be
     /// displayed or not.
@@ -182,7 +182,7 @@ fn default_maxzoom() -> u8 {
     30
 }
 
-fn default_bounds() -> Vec<f32> {
+fn default_bounds() -> Vec<f64> {
     vec![-180.0, -90.0, 180.0, 90.0]
 }
 
